@@ -30,5 +30,5 @@ deploy:
   github-token: $GITHUB_TOKEN
   keep-history: false
   on:
-    branch: dev
+    branch: develop
   target-branch: master

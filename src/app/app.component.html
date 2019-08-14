@@ -1,0 +1,26 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Ostips !</mat-card-title>
+    <mat-card-subtitle>Osti de tips !</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="form">
+      <mat-form-field>
+        <input matInput placeholder="Bill" formControlName="bill" />
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Tips" formControlName="tips" />
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Total" formControlName="total" />
+      </mat-form-field>
+      <div>
+        <mat-slider [max]="30" [min]="2" [step]="1" formControlName="percentTips"> </mat-slider><span>{{ percentTips }}%</span>
+      </div>
+
+      <div>
+        <mat-slider [max]="30" [min]="1" [step]="1" formControlName="split"> </mat-slider><span>{{ split }}</span>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>
