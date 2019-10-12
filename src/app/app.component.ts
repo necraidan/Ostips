@@ -13,11 +13,14 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
-      bill: [0],
+      bill: [],
       tips: [0],
       total: [0],
       percentTips: [15],
-      split: [1]
+      split: [1],
+      partOfBillIndividualy: [0],
+      tipsIndividualy: [0],
+      totalIndividualy: [0]
     });
 
     this.form.get('bill').valueChanges.subscribe(() => {
@@ -27,14 +30,40 @@ export class AppComponent implements OnInit {
     this.form.get('percentTips').valueChanges.subscribe(() => {
       this.compute();
     });
+
+    this.form.get('split').valueChanges.subscribe(() => {
+      this.compute();
+    });
   }
 
   private compute() {
     const tips = this.form.get('percentTips').value * 0.01 * this.form.get('bill').value;
-    const total = parseFloat(this.form.get('bill').value) + tips;
+    const bill = parseFloat(this.form.get('bill').value);
+    const total = bill + tips;
 
-    this.form.get('tips').patchValue(Math.round(tips * 100) / 100);
-    this.form.get('total').patchValue(Math.round(total * 100) / 100);
+    if (isNaN(total)) {
+      return;
+    }
+    const split = this.form.get('split').value;
+
+    const newTips = this.round(tips);
+    const newTotal = this.round(total);
+    this.form.get('tips').patchValue(newTips);
+    this.form.get('total').patchValue(newTotal);
+
+    if (split > 1) {
+      this.form.get('partOfBillIndividualy').patchValue(this.round(bill / split));
+      this.form.get('tipsIndividualy').patchValue(this.round(newTips / split));
+      this.form.get('totalIndividualy').patchValue(this.round(newTotal / split));
+    } else {
+      this.form.get('partOfBillIndividualy').patchValue(0);
+      this.form.get('tipsIndividualy').patchValue(0);
+      this.form.get('totalIndividualy').patchValue(0);
+    }
+  }
+
+  private round(value: number): number {
+    return Math.round(value * 100) / 100;
   }
 
   get percentTips() {
@@ -45,14 +74,3 @@ export class AppComponent implements OnInit {
     return this.form.get('split').value;
   }
 }
-
-// [max]="max" [min]="min" [step]="step" [thumbLabel]="thumbLabel" [tickInterval]="tickInterval"
-/*
-  Bill total
-  tip
-  total
-
-  tip%
-  split
-  split total
-*/
